@@ -10,6 +10,8 @@ if(isset($_REQUEST['enviar']))
 if(isset($_SESSION['carrera'])){
 	$carrera=$_SESSION['carrera'];
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -65,22 +67,20 @@ if(isset($_SESSION['carrera'])){
 	<script>
 			var gridster;
 
-			subjectsData = [
-				
-			<?php  include_once 'sql_class.php';
-			$sql = new sql();
-			$sql->generar_data($carrera);  ?>
-			]
-     		
-     		arregloNames = [	<?php  include_once 'sql_class.php';
-			$sql = new sql();
-			$sql->generar_array($carrera);  ?>];
+			<?php include 'includes/db_connect.php';
+			include 'includes/functions.php';
+			
+			//Se genera la data de los ramos.
+			echo 'subjectsData = [';
+			generar_data($carrera,$mysqli);
+			echo '];';
+			
+			//Se genera el arreglo de posiciones.
+			echo 'arregloNames = [';
+			generar_array($carrera,$mysqli);
+			echo '];';
+			?>
 
-			function setId(s){
-				for(var i=0;i<s.length;i++){
-					s[i]['id'] = i+1;
-				}
-			}
      
 			function printPositions(s){
 			
@@ -92,7 +92,7 @@ if(isset($_SESSION['carrera'])){
 		        	console.log('Col: ' + this.col)
 		        	console.log('Prerrequisitos:')
 		       
-		        	// Si el prerrequisito 1 está definido, entra en el if.
+		        	// Si el prerrequisito 1 estï¿½ definido, entra en el if.
 					if(subjectsData[count]['pre1']!=''){
 						//Se crea la variable preIndex1
 						var preIndex1 = (arregloNames.indexOf(subjectsData[count]['pre1']))
@@ -144,6 +144,13 @@ if(isset($_SESSION['carrera'])){
 						console.log('Ninguno')
 					}
 
+
+					 gridster.remove_widget($('.gridster li').eq(count));
+					 gridster.add_widget(
+			         '<li class="'+subjectsData[count]['status']+'">'+ subjectsData[count]['name']+'</li>',
+			         1, 1, this.col, this.row);
+					
+
 		        });
 				console.log(JSON.stringify(subjectsData))
 			}			
@@ -175,24 +182,8 @@ if(isset($_SESSION['carrera'])){
 				function validate(){
 					//SE OBTIENE LA SERIALIZACION DE LA MALLA
 					s = gridster.serialize();
-					//A CADA OBJETO SE LE ENTREGA UN ID.
-					setId(s);
 					// SE IMPRIMEN LAS POSIOCIONES DE CADA OBJETO EN LA CONSOLA Y SE VALIDA SI TIENE ALGUN PRERQUISITO.
 					printPositions(s);
-
-					// SE BORRAN TODOS LOS OBJETOS QUE SE HABIAN DIBUJADO.
-	        		gridster.remove_all_widgets();
-					// SE VUELVE A DIBUJAR TODOS LOS OBJETOS CON LOS NUEVO PARAMETROS DE S.
-					$.each(s, function(i) {
-			        	if(typeof subjectsData[i]!='undefined'){
-			            	gridster.add_widget(
-			            		'<li class="'+subjectsData[i]['status']+'">'+
-			            		subjectsData[i]['name']+
-			            		'</li>',
-			            		1, 1, this.col, this.row
-			            	);
-			        	}
-			        });
 
 				}
 
