@@ -1,0 +1,31 @@
+.page-title {text-align: center;}
+
+.gridster {
+	background-color: orange;
+	width: 1080px;
+	margin:0 auto;
+	}
+
+.gridster ul {
+	background-color: white;
+	width: 100% !important;
+	max-width: 100%
+	}
+
+
+.gridster li {
+	/* background-color: rgb(201,227,197); */
+	padding-top: 10px;
+	list-style: none;
+	margin-bottom:12px;
+	text-align: center;
+	font-weight: 400;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	font-size: 10px;
+	white-space: normal;
+	overflow: hidden;
+	} 
+	
+.ok	{background-color: rgb(201,227,197);}
+
+.error	{background-color: #FA5882;} 
